@@ -10,9 +10,9 @@ fn main() {
         }
 
         let tpgn = line.trim();
-        let score = solve(tpgn);
+        let (score, num_positions_visited, time_taken) = solve(tpgn);
 
-        println!("{} {}", tpgn, score);
+        println!("{} {} {} {}", tpgn, score, time_taken.as_micros(), num_positions_visited);
 
         line.clear();
     }
