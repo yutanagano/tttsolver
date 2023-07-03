@@ -23,6 +23,39 @@ pub fn solve(tpgn: &str) -> (i8, u32, Duration) {
     (score, counter, time_taken)
 }
 
+pub fn list_tpgns() {
+    let root_position = Position::new();
+    let current_tpgn = "";
+
+    // Recursively explore all possible positions
+    explore_and_print(&root_position, current_tpgn);
+}
+
+fn explore_and_print(position: &Position, current_tpgn: &str) {
+    // Handle special root case
+    if current_tpgn == "" {
+        println!("R");
+    } else {
+        println!("{current_tpgn}");
+    }
+
+    // Exit at terminal state
+    match position.state {
+        GameState::InProgress => (),
+        _ => return
+    }
+
+    for x in 0..BOARD_SIZE {
+        for y in 0..BOARD_SIZE {
+            if position.can_play(x, y) {
+                let next_position = position.play(x, y);
+                let next_tpgn = current_tpgn.to_string() + &format!("{x}{y}");
+                explore_and_print(&next_position, &next_tpgn);
+            }
+        }
+    }
+}
+
 fn negamax(position: &Position, counter: &mut u32) -> i8 {
     *counter += 1;
 

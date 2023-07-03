@@ -1,5 +1,5 @@
 use std::io;
-use tttsovler::solve;
+use tttsolver::solve;
 
 fn main() {
     let mut line = String::new();
