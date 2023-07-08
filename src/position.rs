@@ -115,7 +115,7 @@ impl Position {
     }
 
     fn get_state(board: &[[u8;BOARD_SIZE];BOARD_SIZE], opponent: &Player, moves_played: u8) -> GameState {
-        let potential_loss_score = (moves_played as i8 + 1) / 2 - 6;
+        let potential_loss_score = (moves_played as i8 + 2) / 2 - 6;
         let opponent_val = opponent.as_int();
         
         // Check for vertical wins by opponent

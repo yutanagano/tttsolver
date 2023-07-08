@@ -8,9 +8,7 @@ pub fn solve(tpgn: &str) -> (i8, u32, Duration) {
     let mut counter: u32 = 0;
 
     let now = Instant::now();
-    
     let score = position::negamax(&root_position, &mut counter);
-
     let time_taken = now.elapsed();
 
     (score, counter, time_taken)
