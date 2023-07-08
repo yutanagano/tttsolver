@@ -115,6 +115,11 @@ impl Position {
     }
 
     fn get_state(board: &[[u8;BOARD_SIZE];BOARD_SIZE], opponent: &Player, moves_played: u8) -> GameState {
+        // If less than 5 moves have been played, the game must be ongoing
+        if moves_played < 5 {
+            return GameState::InProgress;
+        }
+
         let potential_loss_score = (moves_played as i8 + 2) / 2 - 6;
         let opponent_val = opponent.as_int();
         
@@ -317,11 +322,11 @@ mod tests {
 
     #[test]
     fn loss_detected() {
-        let position_1 = Position::from_tpgn("0001110222");
-        let position_2 = Position::from_tpgn("001122010221");
+        let position = Position::from_tpgn("0001110222");
+        assert_eq!(position.state, GameState::Lost(-3));
 
-        assert_eq!(position_1.state, GameState::Lost(-3));
-        assert_eq!(position_2.state, GameState::Lost(-2));
+        let position = Position::from_tpgn("001122010221");
+        assert_eq!(position.state, GameState::Lost(-2));
     }
 
     #[test]
@@ -334,11 +339,26 @@ mod tests {
     #[test]
     fn test_negamax() {
         let mut counter: u32 = 0;
+
         let position = Position::from_tpgn("00112201212002");
-
         let score = super::negamax(&position, -3, 3, &mut counter);
-
         assert_eq!(score, 0);
         assert_eq!(counter, 5);
+
+        let position = Position::from_tpgn("1200");
+        let score = super::negamax(&position, -3, 3, &mut counter);
+        assert_eq!(score, 2);
+
+        let position = Position::from_tpgn("0020100121");
+        let score = super::negamax(&position, -3, 3, &mut counter);
+        assert_eq!(score, 0);
+
+        let position = Position::from_tpgn("211201202202");
+        let score = super::negamax(&position, -3, 3, &mut counter);
+        assert_eq!(score, 2);
+
+        let position = Position::from_tpgn("11200001210212");
+        let score = super::negamax(&position, -3, 3, &mut counter);
+        assert_eq!(score, -1);
     }
 }
