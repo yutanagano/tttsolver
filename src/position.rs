@@ -308,9 +308,11 @@ mod tests {
 
     #[test]
     fn loss_detected() {
-        let position = Position::from_tpgn("0001110222");
+        let position_1 = Position::from_tpgn("0001110222");
+        let position_2 = Position::from_tpgn("001122010221");
 
-        assert_eq!(position.state, GameState::Lost(-3));
+        assert_eq!(position_1.state, GameState::Lost(-3));
+        assert_eq!(position_2.state, GameState::Lost(-2));
     }
 
     #[test]
