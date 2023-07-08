@@ -187,7 +187,7 @@ impl Position {
     }
 }
 
-pub fn negamax(position: &Position, counter: &mut u32) -> i8 {
+pub fn negamax(position: &Position, mut alpha: i8, mut beta: i8, counter: &mut u32) -> i8 {
     *counter += 1;
 
     // Exit at terminal state
@@ -198,21 +198,30 @@ pub fn negamax(position: &Position, counter: &mut u32) -> i8 {
     }
 
     // Continue tree search until terminal state
-    let mut best_score = -1 * BOARD_SIZE as i8;
+    let score_upper_bound = 6 - (position.moves_played as i8 + 3) / 2;
+    if beta > score_upper_bound {
+        beta = score_upper_bound;
+        if alpha > beta {
+            return beta;
+        }
+    }
 
     for x in 0..BOARD_SIZE {
         for y in 0..BOARD_SIZE {
             if position.can_play(x, y) {
                 let next_position = position.play(x, y);
-                let score = -negamax(&next_position, counter);
-                if score > best_score {
-                    best_score = score;
+                let score = -negamax(&next_position, -beta, -alpha, counter);
+                if score >= beta {
+                    return score;
+                }
+                if score > alpha {
+                    alpha = score;
                 }
             }
         }
     }
 
-    best_score
+    alpha
 }
 
 pub fn explore_and_print(position: &Position, current_tpgn: &str) {
@@ -327,7 +336,7 @@ mod tests {
         let mut counter: u32 = 0;
         let position = Position::from_tpgn("00112201212002");
 
-        let score = super::negamax(&position, &mut counter);
+        let score = super::negamax(&position, -3, 3, &mut counter);
 
         assert_eq!(score, 0);
         assert_eq!(counter, 5);
