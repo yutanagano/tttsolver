@@ -23,3 +23,14 @@ pub fn list_tpgns() {
     // Recursively explore all possible positions
     position::explore_and_print(&root_position, current_tpgn);
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_solve() {
+        let (score, counter, _) = super::solve("00112201212002");
+
+        assert_eq!(score, 0);
+        assert_eq!(counter, 5);
+    }
+}
